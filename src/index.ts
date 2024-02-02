@@ -1,17 +1,17 @@
-import express from 'express'
+import express, { json } from 'express'
+import { corsMiddleware } from './middlewares/cors'
+import { createItemsRouter } from './routes/items'
 
 const app = express()
-app.use(express.json())
 
-const PORT = 3000
+app.use(json())
+app.use(corsMiddleware())
+app.disable('x-powered-by')
 
-app.get('/', (_req, res) => {
-  res.send('Hello World!')
-})
-app.get('/', (_req, res) => {
-  res.send('Hello World!')
-})
+app.use('/items', createItemsRouter({ movieModel }))
+
+const PORT = process.env.PORT ?? 1234
 
 app.listen(PORT, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`)
+  console.log(`server listening on port http://localhost:${PORT}`)
 })
