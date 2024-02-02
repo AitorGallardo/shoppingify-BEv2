@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { Movie } from '../interfaces/movie'
+import { Movie } from '../interfaces/movie_ex'
 
 // Define Zod schema for movie data
 const movieSchema = z.object({

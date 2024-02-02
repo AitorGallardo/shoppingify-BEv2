@@ -13,7 +13,7 @@ const pool = new Pool(DEFAULT_CONFIG)
 
 // Define your model functions
 export class CartItemModel {
-  async getAllItems (): Promise<any> {
+  async getAll (): Promise<any> {
     const client = await pool.connect()
     try {
       const result = await client.query('SELECT * FROM cart_items')
@@ -23,7 +23,7 @@ export class CartItemModel {
     }
   }
 
-  static async createItem (item: CartItem): Promise<any> {
+  async create (item: CartItem): Promise<any> {
     const { name, price, quantity } = item
     const client = await pool.connect()
     try {
@@ -37,7 +37,7 @@ export class CartItemModel {
     }
   }
 
-  static async updateItem (id: number, updates: CartItem): Promise<any> {
+  async update (id: number, updates: CartItem): Promise<any> {
     const { name, price, quantity } = updates
     const client = await pool.connect()
     try {
@@ -51,7 +51,7 @@ export class CartItemModel {
     }
   }
 
-  static async deleteItem (id: number): Promise<any> {
+  async delete (id: number): Promise<any> {
     const client = await pool.connect()
     try {
       const result = await client.query('DELETE FROM cart_items WHERE id = $1 RETURNING *', [id])

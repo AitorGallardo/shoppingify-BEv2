@@ -1,17 +1,17 @@
 import { Request, Response } from 'express'
-import { validateMovie } from '../entities/schemas/items'
+import { CartItemModel } from '../entities/models/cartItem'
+import { validateCartItem } from '../entities/schemas/cartItem'
 
-export class MovieController {
-  movieModel: any
-  constructor ({ movieModel }: { movieModel: any } = { movieModel: null }) {
-    this.movieModel = movieModel
+export class CartItemController {
+  cartItemModel: CartItemModel
+  constructor ({ cartItemModel }: { cartItemModel: CartItemModel }) {
+    this.cartItemModel = cartItemModel
   }
 
-  // getAll = async (req: Request, res: Response): Promise<any> => {
-  //   const { genre } = req.query
-  //   const movies = await this.movieModel.getAll({ genre })
-  //   res.json(movies)
-  // }
+  getAll = async (_req: Request, res: Response): Promise<void> => {
+    const movies = await this.cartItemModel.getAll()
+    res.status(200).json(movies)
+  }
 
   // getById = async (req: Request, res: Response): Promise<any> => {
   //   const { id } = req.params
@@ -22,8 +22,8 @@ export class MovieController {
 
   create = async (req: Request, res: Response): Promise<any> => {
     try {
-      const movie = validateMovie(req.body)
-      const newMovie = await this.movieModel.create({ input: movie })
+      const cartItem = validateCartItem(req.body)
+      const newMovie = await this.cartItemModel.create(cartItem)
       res.status(201).json(newMovie)
     } catch (error: any) {
       return res.status(400).json({ error: JSON.parse(error) })
@@ -33,7 +33,7 @@ export class MovieController {
   delete = async (req: Request, res: Response): Promise<any> => {
     const { id } = req.params
 
-    const result = await this.movieModel.delete({ id })
+    const result = await this.cartItemModel.delete(+id)
 
     if (result === false) {
       return res.status(404).json({ message: 'Movie not found' })
