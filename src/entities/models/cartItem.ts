@@ -1,14 +1,18 @@
 import { CartItem } from './../interfaces/cartItem'
 import { Pool } from 'pg'
+import { config } from 'dotenv'
+
+config()
 
 // Set up your PostgreSQL connection pool
 const DEFAULT_CONFIG = {
-  user: 'your_username',
-  host: 'your_host',
-  database: 'your_database',
-  password: 'your_password',
-  port: 5432 // Default PostgreSQL port
+  user: process.env.DB_USER ?? '',
+  host: process.env.DB_HOST ?? '',
+  database: process.env.DB_NAME ?? '',
+  password: process.env.DB_PASSWORD ?? '',
+  port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 1234
 }
+
 const pool = new Pool(DEFAULT_CONFIG)
 
 // Define your model functions
