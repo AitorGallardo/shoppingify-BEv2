@@ -58,13 +58,44 @@ export class CartItemModel {
     }
   }
 
-  async update (id: number, updates: CartItem): Promise<any> {
-    const { name, price, quantity } = updates
+  async update (id: number, updates: Partial<CartItem>): Promise<any> {
+    const client = await pool.connect()
+    try {
+      let query = 'UPDATE cart_items SET '
+      const values = []
+      let index = 1
+
+      Object.keys(updates).forEach((key, _i) => {
+        query += `${key} = $${index}, `
+        const updatesAsAny = updates as any
+        values.push(updatesAsAny[key])
+        index++
+      })
+
+      // Delete last comma and space
+      query = query.slice(0, -2)
+
+      // Add where with item id and returning query result
+      query += ` WHERE id = $${index} RETURNING *`
+
+      // Add id value
+      values.push(id)
+
+      const result = await client.query(query, values)
+
+      return result.rows[0]
+    } finally {
+      client.release()
+    }
+  }
+
+  async replace (id: number, updates: Partial<CartItem>): Promise<any> {
+    const { name, price, quantity, category } = updates
     const client = await pool.connect()
     try {
       const result = await client.query(
-        'UPDATE cart_items SET name = $1, price = $2, quantity = $3 WHERE id = $4 RETURNING *',
-        [name, price, quantity, id]
+        'UPDATE cart_items SET name = $1, price = $2, quantity = $3, category = $4 WHERE id = $5 RETURNING *',
+        [name, price, quantity, category, id]
       )
       return result.rows[0]
     } finally {

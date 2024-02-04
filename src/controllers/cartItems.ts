@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { CartItemModel } from '../entities/models/cartItem'
-import { validateCartItem } from '../entities/schemas/cartItem'
+import { validateCartItem, validatePartialCartItem } from '../entities/schemas/cartItem'
 import picocolors from 'picocolors'
 
 export class CartItemController {
@@ -25,8 +25,8 @@ export class CartItemController {
   create = async (req: Request, res: Response): Promise<any> => {
     try {
       const cartItem = validateCartItem(req.body)
-      const newMovie = await this.cartItemModel.create(cartItem)
-      res.status(201).json(newMovie)
+      const newCartItem = await this.cartItemModel.create(cartItem)
+      res.status(201).json(newCartItem)
     } catch (error: any) {
       console.error(picocolors.magenta(error))
       return res.status(400).json({ error: JSON.parse(error) })
@@ -45,17 +45,16 @@ export class CartItemController {
     return res.json({ message: 'Movie deleted' })
   }
 
-  // update = async (req: Request, res: Response): Promise<any> => {
-  //   const result = validatePartialMovie(req.body)
+  update = async (req: Request, res: Response): Promise<any> => {
+    try {
+      const { id } = req.params
 
-  //   if (!result.success) {
-  //     return res.status(400).json({ error: JSON.parse(result.error.message) })
-  //   }
-
-  //   const { id } = req.params
-
-  //   const updatedMovie = await this.movieModel.update({ id, input: result.data })
-
-  //   return res.json(updatedMovie)
-  // }
+      const cartItem = validatePartialCartItem(req.body)
+      const updatedCartItem = await this.cartItemModel.update(Number(id), cartItem)
+      res.status(201).json(updatedCartItem)
+    } catch (error: any) {
+      console.error(picocolors.magenta(error))
+      return res.status(400).json({ error: JSON.parse(error) })
+    }
+  }
 }

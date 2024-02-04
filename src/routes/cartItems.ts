@@ -10,6 +10,7 @@ export const createItemsRouter = ({ cartItemModel }: any): any => {
   itemsRouter.get('/', cartItemController.getAll)
   itemsRouter.get('/:id', cartItemController.getById)
   itemsRouter.post('/', cartItemController.create)
+  itemsRouter.patch('/:id', cartItemController.update)
   //   router.put('/:id', itemController.updateItem);
   //   router.delete('/:id', itemController.deleteItem);
 

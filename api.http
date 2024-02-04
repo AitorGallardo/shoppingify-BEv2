@@ -17,6 +17,17 @@ Content-Type: application/json
   "category": "Snacks"
 }
 
+### Update a cart item
+PATCH http://localhost:1234/items/33
+Content-Type: application/json
+
+{
+  "name": "Olive",
+  "price": 1.98,
+  "category": "Snacks",
+  "quantity": 3
+}
+
 
 
 ### Recuperar todas las películas
