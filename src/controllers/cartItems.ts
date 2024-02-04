@@ -33,18 +33,6 @@ export class CartItemController {
     }
   }
 
-  delete = async (req: Request, res: Response): Promise<any> => {
-    const { id } = req.params
-
-    const result = await this.cartItemModel.delete(+id)
-
-    if (result === false) {
-      return res.status(404).json({ message: 'Movie not found' })
-    }
-
-    return res.json({ message: 'Movie deleted' })
-  }
-
   update = async (req: Request, res: Response): Promise<any> => {
     try {
       const { id } = req.params
@@ -56,5 +44,17 @@ export class CartItemController {
       console.error(picocolors.magenta(error))
       return res.status(400).json({ error: JSON.parse(error) })
     }
+  }
+
+  delete = async (req: Request, res: Response): Promise<any> => {
+    const { id } = req.params
+
+    const result = await this.cartItemModel.delete(+id)
+
+    if (result === false) {
+      return res.status(404).json({ message: 'Cart item not found' })
+    }
+
+    return res.json({ message: `Cart item with name: ${result.name} has been deleted!` })
   }
 }

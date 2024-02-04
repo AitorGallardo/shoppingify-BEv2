@@ -12,13 +12,13 @@ POST http://localhost:1234/items
 Content-Type: application/json
 
 {
-  "name": "Oliva",
+  "name": "Olive",
   "pice": 2.23,
   "category": "Snacks"
 }
 
 ### Update a cart item
-PATCH http://localhost:1234/items/33
+PATCH http://localhost:1234/items/36
 Content-Type: application/json
 
 {
@@ -27,6 +27,9 @@ Content-Type: application/json
   "category": "Snacks",
   "quantity": 3
 }
+
+### Delete cart item
+DELETE http://localhost:1234/items/36
 
 
 
