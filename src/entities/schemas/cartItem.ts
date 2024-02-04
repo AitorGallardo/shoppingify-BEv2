@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { CartItem } from '../interfaces/cartItem'
+import { GroceryCategory } from '../types/consts'
 
 const cartItemSchema = z.object({
   name: z.string({
@@ -7,7 +8,8 @@ const cartItemSchema = z.object({
     required_error: 'Item name is required.'
   }),
   price: z.number().min(0).max(10).default(5),
-  quantity: z.number().min(0).max(10).default(5)
+  quantity: z.number().min(1).max(10).default(1),
+  category: z.nativeEnum(GroceryCategory)
 })
 
 export function validateCartItem (input: unknown): CartItem {

@@ -1,6 +1,23 @@
 ### Get all Cart Items
 GET http://localhost:1234/items
 
+### Get Cart Item by Id
+GET http://localhost:1234/items/3
+
+### Get all Cart Items by type
+GET http://localhost:1234/items?category=cereal 
+
+### Create a cart item
+POST http://localhost:1234/items
+Content-Type: application/json
+
+{
+  "name": "Oliva",
+  "pice": 2.23,
+  "category": "Snacks"
+}
+
+
 
 ### Recuperar todas las películas
 GET http://localhost:1234/movies

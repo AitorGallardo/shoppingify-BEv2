@@ -1,6 +1,7 @@
 import { CartItem } from './../interfaces/cartItem'
 import { Pool } from 'pg'
 import { config } from 'dotenv'
+import { ParsedQs } from 'qs'
 
 config()
 
@@ -17,9 +18,15 @@ const pool = new Pool(DEFAULT_CONFIG)
 
 // Define your model functions
 export class CartItemModel {
-  async getAll (): Promise<any> {
+  async getAll ({ category }: { category: string | ParsedQs | string[] | ParsedQs[] | undefined }): Promise<any> {
     const client = await pool.connect()
     try {
+      if (category) {
+        category = category as string
+        const lowerCaseCategory = category.toLowerCase()
+        const result = await client.query('SELECT * FROM cart_items WHERE LOWER(category::TEXT) = $1', [lowerCaseCategory])
+        return result.rows
+      }
       const result = await client.query('SELECT * FROM cart_items')
       return result.rows
     } finally {
@@ -27,13 +34,23 @@ export class CartItemModel {
     }
   }
 
+  async getById (id: number): Promise<any> {
+    const client = await pool.connect()
+    try {
+      const result = await client.query('SELECT * FROM cart_items WHERE id = $1', [id])
+      return result.rows
+    } finally {
+      client.release()
+    }
+  }
+
   async create (item: CartItem): Promise<any> {
-    const { name, price, quantity } = item
+    const { name, price, quantity, category } = item
     const client = await pool.connect()
     try {
       const result = await client.query(
-        'INSERT INTO cart_items(name, price, quantity) VALUES($1, $2, $3) RETURNING *',
-        [name, price, quantity]
+        'INSERT INTO cart_items(name, price, quantity, category) VALUES($1, $2, $3, $4) RETURNING *',
+        [name, price, quantity, category]
       )
       return result.rows[0]
     } finally {
